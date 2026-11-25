@@ -14,7 +14,720 @@
       --bg: #0c0a08;
       --bg-elevated: #14110e;
       --bg-card: rgba(28, 22, 16, 0.75);
-      --bg-input: rgba(20, 16, 12, 0.9);
+      --bg-input: rgba(20, 16, 12, 0.9);<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0a08" />
+  <meta name="description" content="CornHub — private search and in-app browser. Everything stays inside the page." />
+  <title>CornHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0a08;
+      --bg-elevated: #14110e;
+      --bg-card: rgba(28, 22, 16, 0.8);
+      --bg-input: rgba(20, 16, 12, 0.95);
+      --border: rgba(245, 166, 35, 0.12);
+      --border-strong: rgba(245, 166, 35, 0.3);
+      --text: #f5f0e8;
+      --text-muted: #a89880;
+      --text-dim: #6e6250;
+      --accent: #f5a623;
+      --accent2: #ff6b35;
+      --accent-soft: rgba(245, 166, 35, 0.14);
+      --accent-glow: rgba(245, 166, 35, 0.32);
+      --radius: 14px;
+      --font: "Inter", system-ui, -apple-system, sans-serif;
+      --display: "Outfit", system-ui, sans-serif;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --topbar-h: 60px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      height: var(--topbar-h);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 20;
+    }
+    .brand {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 55%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-btns { display: flex; gap: 4px; }
+    .nav-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--border);
+    }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+    .search-form {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 6px 0 14px;
+      min-width: 0;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-form:focus-within {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .search-form input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      padding: 10px 10px 10px 0;
+      min-width: 0;
+    }
+    .search-form input::placeholder { color: var(--text-dim); }
+    .search-form .go {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #1a1208;
+      border: none;
+      border-radius: 9px;
+      padding: 8px 16px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .top-actions { display: flex; gap: 6px; }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .icon-btn:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--border-strong);
+    }
+
+    .workspace {
+      height: calc(100% - var(--topbar-h));
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .home {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px 40px;
+      overflow-y: auto;
+      background:
+        radial-gradient(ellipse 70% 40% at 50% -10%, rgba(245, 166, 35, 0.12), transparent 55%),
+        var(--bg);
+    }
+    .home.hidden { display: none; }
+    .logo {
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 8vw, 3.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .tagline {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .engine-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .engine-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .engine-btn.active,
+    .engine-btn:hover {
+      background: var(--accent-soft);
+      border-color: var(--border-strong);
+      color: var(--accent);
+    }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      text-align: center;
+      width: 100%;
+      max-width: 640px;
+    }
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+      gap: 10px;
+      width: 100%;
+      max-width: 640px;
+    }
+    .app {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+      text-decoration: none;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+    }
+    .app:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+    .app .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .app span {
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .i-yt { background: #ff0000; color: #fff; }
+    .i-discord { background: #5865f2; color: #fff; }
+    .i-tiktok { background: #111; color: #fff; }
+    .i-github { background: #24292e; color: #fff; }
+    .i-google { background: #fff; color: #4285f4; }
+    .i-x { background: #000; color: #fff; }
+    .i-music { background: #1db954; color: #fff; }
+    .i-games { background: #9b59b6; color: #fff; }
+    .i-ai { background: #00d4ff; color: #002; }
+    .i-movies { background: #e74c3c; color: #fff; }
+    .i-chat { background: #2ecc71; color: #fff; }
+    .i-brave { background: #fb542b; color: #fff; }
+    .i-ddg { background: #de5833; color: #fff; }
+    .i-reddit { background: #ff4500; color: #fff; }
+    .i-wiki { background: #36c; color: #fff; }
+    .i-twitch { background: #9146ff; color: #fff; }
+
+    .browser {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      background: #000;
+    }
+    .browser.active { display: flex; }
+    .browser iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #111;
+    }
+    .browser-status {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--border);
+      gap: 8px;
+    }
+    .browser-status .url {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-muted);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+    .panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(360px, 100%);
+      background: var(--bg-elevated);
+      border-left: 1px solid var(--border);
+      z-index: 50;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .panel.open { transform: translateX(0); }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-header h2 {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+    }
+    .field input, .field select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 11px 12px;
+      outline: none;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--border-strong);
+    }
+    .field .hint {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    .panel-footer {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      flex: 1;
+      padding: 11px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #1a1208;
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      z-index: 60;
+      opacity: 0;
+      transition: all 0.25s;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 560px) {
+      .brand { display: none; }
+      .apps { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" id="homeBtn" title="Home">CornHub</div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="backBtn" title="Back" disabled>←</button>
+      <button class="nav-btn" id="fwdBtn" title="Forward" disabled>→</button>
+      <button class="nav-btn" id="reloadBtn" title="Reload">↻</button>
+    </div>
+    <form class="search-form" id="searchForm" autocomplete="off">
+      <input id="q" type="text" placeholder="search or paste any url..." spellcheck="false" />
+      <button type="submit" class="go">Go</button>
+    </form>
+    <div class="top-actions">
+      <button class="icon-btn" id="homeIcon" title="Home">⌂</button>
+      <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <div class="home" id="home">
+      <h1 class="logo">CornHub</h1>
+      <p class="tagline">search stays inside · nothing leaves this page</p>
+
+      <div class="engine-row" id="engineRow">
+        <button type="button" class="engine-btn active" data-engine="ddg">DuckDuckGo</button>
+        <button type="button" class="engine-btn" data-engine="brave">Brave</button>
+        <button type="button" class="engine-btn" data-engine="startpage">Startpage</button>
+      </div>
+
+      <p class="section-label">Quick apps</p>
+      <div class="apps" id="apps">
+        <a class="app" data-url="https://duckduckgo.com"><div class="icon i-ddg">DDG</div><span>DuckDuckGo</span></a>
+        <a class="app" data-url="https://search.brave.com"><div class="icon i-brave">🦁</div><span>Brave</span></a>
+        <a class="app" data-url="https://www.youtube.com"><div class="icon i-yt">▶</div><span>YouTube</span></a>
+        <a class="app" data-url="https://discord.com/app"><div class="icon i-discord">💬</div><span>Discord</span></a>
+        <a class="app" data-url="https://www.tiktok.com"><div class="icon i-tiktok">♪</div><span>TikTok</span></a>
+        <a class="app" data-url="https://github.com"><div class="icon i-github">⌥</div><span>GitHub</span></a>
+        <a class="app" data-url="https://www.google.com"><div class="icon i-google">G</div><span>Google</span></a>
+        <a class="app" data-url="https://x.com"><div class="icon i-x">𝕏</div><span>X</span></a>
+        <a class="app" data-url="https://open.spotify.com"><div class="icon i-music">♫</div><span>Music</span></a>
+        <a class="app" data-url="https://www.twitch.tv"><div class="icon i-twitch">◈</div><span>Twitch</span></a>
+        <a class="app" data-url="https://chatgpt.com"><div class="icon i-ai">✦</div><span>AI</span></a>
+        <a class="app" data-url="https://www.reddit.com"><div class="icon i-reddit">R</div><span>Reddit</span></a>
+        <a class="app" data-url="https://en.wikipedia.org"><div class="icon i-wiki">W</div><span>Wiki</span></a>
+        <a class="app" data-url="https://www.netflix.com"><div class="icon i-movies">🎬</div><span>Movies</span></a>
+        <a class="app" data-url="https://web.whatsapp.com"><div class="icon i-chat">💬</div><span>Chat</span></a>
+        <a class="app" data-url="https://www.roblox.com"><div class="icon i-games">▣</div><span>Games</span></a>
+      </div>
+    </div>
+
+    <div class="browser" id="browser">
+      <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads" allow="fullscreen"></iframe>
+      <div class="browser-status">
+        <span>in-app</span>
+        <span class="url" id="statusUrl">about:blank</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="panel" id="panel">
+    <div class="panel-header">
+      <h2>Settings</h2>
+      <button class="icon-btn" id="closePanel">✕</button>
+    </div>
+    <div class="panel-body">
+      <div class="field">
+        <label>Default search engine</label>
+        <select id="defaultEngine">
+          <option value="ddg">DuckDuckGo</option>
+          <option value="brave">Brave Search</option>
+          <option value="startpage">Startpage</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Custom proxy gateway (optional)</label>
+        <input id="proxyBase" type="text" placeholder="https://your-proxy.example/?url={url}" spellcheck="false" />
+        <p class="hint">If you have a real proxy (Ultraviolet / Scramjet etc.), paste the template here. Use <code>{url}</code> where the target goes. Leave empty to load sites directly in the in-app frame.</p>
+      </div>
+      <div class="field">
+        <label>About</label>
+        <p class="hint">CornHub keeps search and pages inside this window using an in-app browser. Many sites block being framed (X-Frame-Options). For full unblocking you still need a real proxy backend in the gateway field above.</p>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-ghost" id="resetBtn">Reset</button>
+      <button class="btn btn-primary" id="saveBtn">Save</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (() => {
+    const STORAGE_KEY = 'cornhub_v2';
+    const engines = {
+      ddg: (q) => `https://duckduckgo.com/?q=${encodeURIComponent(q)}&kp=-1`,
+      brave: (q) => `https://search.brave.com/search?q=${encodeURIComponent(q)}`,
+      startpage: (q) => `https://www.startpage.com/sp/search?query=${encodeURIComponent(q)}`
+    };
+    const defaults = { engine: 'ddg', proxyBase: '' };
+    let state = load();
+    let historyStack = [];
+    let historyIndex = -1;
+
+    const home = document.getElementById('home');
+    const browser = document.getElementById('browser');
+    const frame = document.getElementById('frame');
+    const qInput = document.getElementById('q');
+    const statusUrl = document.getElementById('statusUrl');
+    const backBtn = document.getElementById('backBtn');
+    const fwdBtn = document.getElementById('fwdBtn');
+    const toastEl = document.getElementById('toast');
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return { ...defaults, ...JSON.parse(raw) };
+      } catch (_) {}
+      return { ...defaults };
+    }
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 2200);
+    }
+
+    function looksLikeUrl(str) {
+      str = str.trim();
+      return /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(str);
+    }
+    function normalizeUrl(str) {
+      str = str.trim();
+      if (!/^https?:\/\//i.test(str)) str = 'https://' + str;
+      return str;
+    }
+    function buildProxyUrl(target) {
+      const base = (state.proxyBase || '').trim();
+      if (!base) return target;
+      if (base.includes('{url}')) {
+        return base.replace(/\{url\}/g, encodeURIComponent(target));
+      }
+      const join = base.includes('?') ? '&' : '?';
+      return base + join + 'url=' + encodeURIComponent(target);
+    }
+
+    function showHome() {
+      home.classList.remove('hidden');
+      browser.classList.remove('active');
+      qInput.value = '';
+      statusUrl.textContent = 'home';
+      updateNav();
+    }
+    function showBrowser() {
+      home.classList.add('hidden');
+      browser.classList.add('active');
+    }
+
+    function navigate(url, push = true) {
+      if (!url) return;
+      const finalUrl = state.proxyBase ? buildProxyUrl(url) : url;
+      showBrowser();
+      frame.src = finalUrl;
+      statusUrl.textContent = url;
+      qInput.value = url;
+
+      if (push) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+        historyStack.push(url);
+        historyIndex = historyStack.length - 1;
+      }
+      updateNav();
+    }
+
+    function updateNav() {
+      backBtn.disabled = historyIndex <= 0;
+      fwdBtn.disabled = historyIndex >= historyStack.length - 1;
+    }
+
+    function doSearch(raw) {
+      raw = (raw || '').trim();
+      if (!raw) return;
+
+      let target;
+      if (looksLikeUrl(raw)) {
+        target = normalizeUrl(raw);
+      } else {
+        target = engines[state.engine](raw);
+      }
+      navigate(target);
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      doSearch(qInput.value);
+    });
+
+    backBtn.addEventListener('click', () => {
+      if (historyIndex > 0) {
+        historyIndex--;
+        navigate(historyStack[historyIndex], false);
+      }
+    });
+    fwdBtn.addEventListener('click', () => {
+      if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        navigate(historyStack[historyIndex], false);
+      }
+    });
+    document.getElementById('reloadBtn').addEventListener('click', () => {
+      if (browser.classList.contains('active')) {
+        frame.src = frame.src;
+      }
+    });
+    document.getElementById('homeBtn').addEventListener('click', showHome);
+    document.getElementById('homeIcon').addEventListener('click', showHome);
+
+    document.querySelectorAll('.engine-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.engine-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.engine = btn.dataset.engine;
+        save();
+      });
+    });
+
+    document.querySelectorAll('.app').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigate(el.dataset.url);
+      });
+    });
+
+    const panel = document.getElementById('panel');
+    const overlay = document.getElementById('overlay');
+    function openPanel() {
+      document.getElementById('defaultEngine').value = state.engine;
+      document.getElementById('proxyBase').value = state.proxyBase || '';
+      panel.classList.add('open');
+      overlay.classList.add('show');
+    }
+    function closePanel() {
+      panel.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+    document.getElementById('settingsBtn').addEventListener('click', openPanel);
+    document.getElementById('closePanel').addEventListener('click', closePanel);
+    overlay.addEventListener('click', closePanel);
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      state.engine = document.getElementById('defaultEngine').value;
+      state.proxyBase = document.getElementById('proxyBase').value.trim();
+      save();
+      document.querySelectorAll('.engine-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.engine === state.engine);
+      });
+      closePanel();
+      toast('Settings saved');
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      state = { ...defaults };
+      save();
+      document.querySelectorAll('.engine-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.engine === 'ddg');
+      });
+      closePanel();
+      toast('Reset');
+    });
+
+    document.querySelectorAll('.engine-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.engine === state.engine);
+    });
+
+    qInput.focus();
+  })();
+  </script>
+</body>
+</html>
+
       --border: rgba(245, 166, 35, 0.12);
       --border-strong: rgba(245, 166, 35, 0.28);
       --text: #f5f0e8;

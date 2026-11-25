@@ -1,0 +1,31 @@
+{
+  "name": "cornhub",
+  "version": "1.0.0",
+  "description": "CornHub — modern private search + proxy front-end. Static, works on jsDelivr / GitHub Pages / any static host.",
+  "main": "index.html",
+  "files": [
+    "index.html",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "npx serve .",
+    "serve": "npx serve ."
+  },
+  "keywords": [
+    "proxy",
+    "search",
+    "new-tab",
+    "duckduckgo",
+    "brave",
+    "static",
+    "school",
+    "cornhub"
+  ],
+  "author": "Cosmo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/cornhub.git"
+  },
+  "homepage": "https://cdn.jsdelivr.net/npm/cornhub@1.0.0/index.html"
+}
